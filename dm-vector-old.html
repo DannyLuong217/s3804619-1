@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="locomotive-scroll.css">
+    <link rel="stylesheet" href="lungtung.css">
+    <link rel="stylesheet" href="config.css">
+    <link rel="stylesheet" href="https://codepen.io/GreenSock/pen/7ba936b34824fefdccfe2c6d9f0b740b.css">
+
+</head>
+<style>
+
+</style>
+
+<body>
+
+    <div id="globeViz"></div>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.122.0/build/three.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.122.0/examples/js/controls/OrbitControls.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r92/examples/js/loaders/GLTFLoader.js"></script>
+
+
+<script src="https://unpkg.co/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
+
+
+<script>
+
+    var scene, camera, renderer, clock, binormal, circle, modelROcket, box, curveLine, splineObject, curveObj, curvee,loaderss,rocketne,curve122;
+
+    init();
+
+    function init() {
+
+        //config each
+        const assetPath = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/2666677/";
+
+        //CONFIG DEFEN
+        clock = new THREE.Clock();
+        scene = new THREE.Scene();
+        //// bg-map ( dàn toàn cảnh)
+        /*   const envMap = new THREE.CubeTextureLoader()
+              .setPath(`${assetPath}skybox1_`)
+              .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']); */
+
+        //  scene.background = envMap;
+
+        // CAMERA
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000);
+
+        /////////////////// TOOL HEPEER
+        scene.add(new THREE.GridHelper(123, 10));
+        //scene.add( new THREE.CameraHelper( camera ) );
+        scene.add(new THREE.AxesHelper(100))
+
+
+
+        // GENERAL RENDER
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // SET LIGHT
+
+        const ambientLight = new THREE.AmbientLight(0xd2d2d2, 1);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xfdfcf0, 1)
+        directionalLight.position.set(80, 80, -50) // set point to light ( chiều đèn)
+        scene.add(directionalLight)
+
+
+        var loaderss = new THREE.GLTFLoader();
+   
+          loaderss.load(
+            './src3d/test/new-full-1.glb',
+            function (gltf) {
+                rocketne = gltf.scene;
+                scene.add(rocketne)
+     
+            },
+            function (xhr) {
+        
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        
+            },
+            function (error) {
+                console.log('Lỗi file');
+            }
+        );
+
+        ////////////////////////// CONTROL AND POSITION //////////////////////////////
+
+        // ORBITCONTROLL
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        // POSITION AND LOOCKAT DEFUALT
+
+        //// CAMERA
+       camera.position.set(0, 0, 150);//wide position
+        camera.lookAt(0, 0, 0);
+      
+        console.log(camera)
+        //moon
+
+
+        window.addEventListener('wheel', onMouseWheel, false);
+      //  window.addEventListener('wheel', onMouseWheelOnly, false);
+        window.addEventListener('resize', resize, false);
+
+
+
+
+
+        // RENDER
+        update();
+
+        function update() {
+            // requestAnimationFrame
+            requestAnimationFrame(update); // BA91T BUỘC , REQUSTFRAME
+            directionalLight.position.z +=2
+            directionalLight.position.x -=20
+          // updateCamera();
+
+            renderer.render(scene, camera);
+            document.getElementById('globeViz').appendChild(renderer.domElement);
+        }
+    }
+   
+    function updateCamera() {
+        const time = clock.getElapsedTime();
+
+    }
+
+
+
+
+    function resize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+
+</script>
+
+</html>
